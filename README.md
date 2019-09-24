@@ -32,7 +32,7 @@ npm i
 ```
 ### Link component
 ```
-npm link test-component
+npm link circlepack
 ```
 ### Start test app
 ```
