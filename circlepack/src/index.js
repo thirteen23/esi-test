@@ -1,6 +1,6 @@
 import React from 'react';
 import { hierarchy, pack } from 'd3-hierarchy';
-import { select, selectAll } from 'd3-selection';
+import { select } from 'd3-selection';
 
 
 export default class CirclePack extends React.Component {
