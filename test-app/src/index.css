@@ -19,3 +19,45 @@ code {
     padding: 15px;
     margin: 10px;
 }
+
+circle {
+    stroke: rgba(189, 143, 44, 1);
+    stroke-width: 3px;
+}
+
+.child {
+    fill: rgba(255, 205, 52, 0.25);
+}
+
+.child:hover {
+    fill: rgba(255, 205, 52, 1);
+    cursor: pointer;
+}
+
+.child:hover > text {
+    fill: rgba(0, 0, 0, 1);
+}
+
+.parent {
+    fill: rgba(255, 205, 52, 0.05);
+}
+
+text {
+    font: 28px 'rubik', sans-serif;
+    fill: rgba(255, 255, 255, 1);
+    line-height: 1.2;
+}
+
+text .text-bold {
+    font-weight: bold;
+}
+
+.boxes {
+    position: relative;
+    float: left;
+    width: 50%;
+}
+
+.circles {
+    position: relative;
+}
