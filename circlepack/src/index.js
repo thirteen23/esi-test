@@ -2,29 +2,63 @@ import React from 'react';
 import { hierarchy, pack } from 'd3-hierarchy';
 import { select } from 'd3-selection';
 
-
 export default class CirclePack extends React.Component {
     constructor(props) {
         super(props);
 
         this.drawCirclePack = this.drawCirclePack.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.getNumberNumber = this.getNumberNumber.bind(this);
+        this.buildCircleData = this.buildCircleData.bind(this);
     }
 
     componentDidMount() {
         this.drawCirclePack();
     }
 
-    componentDidUpdate(prevProps) {
-        this.drawCirclePack();
+    componentDidUpdate() {
+        this.updateCirclePack();
     }
 
     handleClick(d) {
-        this.props.onClick(d.data.type);
+        this.props.onClick(d.data.param);
+    }
+
+    getNumberNumber(n) {
+        /**
+         * We have to do some parsing here because the data provided
+         * as a sample is coming in as a preformatted string
+         * (e.g. "1,300") and not catching that was cousing
+         * some issues.
+         */
+        var count;
+        if (typeof n === 'string') {
+            count = (n === '') ? 0 : parseFloat(n.replace(/\,/g, ''));
+        } else {
+            count = n;
+        }
+        return count;
+    }
+
+    buildCircleData() {
+        return hierarchy(this.props.json, (d) => d.data)
+            .sum((d) => {
+                /**
+                 * We need to compensate for zero here some how, so adding a
+                 * base number to the count during this calculation makes sense
+                 * so zero will render, but it won't effect the scale of the
+                 * other circles
+                 */
+                var zeroAdjust = this.props.zeroAdjust || 10;
+                var count = this.getNumberNumber(d.count) + zeroAdjust;
+
+                return count;
+            })
+            .sort((d) => d.count);
     }
 
     drawCirclePack() {
-        var g = select('svg')
+        this.g = select('svg')
             .attr('viewBox', [0, 0, this.props.width, this.props.height])
             .attr('width', this.props.width)
             .attr('height', this.props.height)
@@ -34,61 +68,97 @@ export default class CirclePack extends React.Component {
             .size([this.props.width, this.props.height])
             .padding(3);
 
-        var root = hierarchy(this.props.json)
-            .sum((d) => {
-                var count;
-                /**
-                 * We have to do some parsing here because the data provided
-                 * as a sample is coming in as a preformatted string
-                 * (e.g. "1,300") and not catching that was cousing
-                 * some issues.
-                 */
-                if (typeof d.count === 'string') {
-                    count = parseFloat(d.count.replace(/\,/g, ''));
-                } else {
-                    count = d.count;
-                }
-                return count;
-            })
-            .sort((d) => d.count);
+        var root = this.buildCircleData();
         var nodes = root.descendants();
+
         layout(root);
 
-        var slices = g.selectAll('circle').data(nodes).enter().append('g')
-            .on('click', (d) => this.handleClick(d))
-            .attr('class', (d) => (d.parent) ? 'child' : 'parent');
+        var slices = this.g.selectAll('circle').data(nodes).enter().append('g')
+            .on('click', (d) => {
+                if (this.getNumberNumber(d.data.count) !== 0) {
+                    return this.handleClick(d);
+                }
+            })
+            .attr('class', (d) => {
+                var cname = (d.parent) ? 'child' : 'parent';
+                if (this.getNumberNumber(d.data.count) === 0) {
+                    cname = cname + ' zero';
+                }
+                return cname;
+            });
 
         /**
          * Create the circles and attach click handler to them along with a class for the cursor
          */
         slices
             .append('circle')
-            .attr('cx', (d) =>  d.x)
+            .attr('cx', (d) => d.x)
             .attr('cy', (d) => d.y)
             .attr('r', (d) => d.r - 2);
 
         var sliceText = slices.append('text')
-            .attr('text-anchor', 'middle');
-
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'middle')
+            .attr('x', (d) => d.x)
+            .attr('y', (d) => d.y)
         sliceText
             .append('tspan')
-            .attr('x', (d) => d.x)
-            .attr('y', (d) => d.y - 18)
             .text((d) => {
-                if (d.parent) { return d.data.type }
+                if ((d.r - 2) >= this.props.minSize) {
+                    if (d.parent) { return d.data.type }
+                }
             })
         sliceText
             .append('tspan')
             .attr('x', (d) => d.x)
-            .attr('y', (d) => d.y + 18)
+            .attr('dy', (d) => '1.25em')
             .attr('class', 'text-bold')
             .text((d) => {
-                if (d.parent) { return d.data.count }
+                if ((d.r - 2) >= this.props.minSize) {
+                    if (d.parent) { return d.data.count }
+                }
+            })
+
+        sliceText
+            .style("font-size", function (d) {
+                /**
+                 * this is getting declared as function(d) {}
+                 * instead of (d) => {} for scope reasons
+                 */
+                var maxSize = 28;
+                var minSize = 18;
+                var finalSize;
+                var calculatedSize = Math.floor((2 * d.r - 8) / this.getComputedTextLength() * 16);
+
+                if (calculatedSize >= maxSize) {
+                    finalSize = maxSize;
+                } else if (calculatedSize <= minSize) {
+                    finalSize = minSize;
+                } else {
+                    finalSize = calculatedSize;
+                }
+                return finalSize + "px";
+            })
+
+    }
+
+    updateCirclePack() {
+        this.g
+            .selectAll('g')
+            .data(this.buildCircleData().descendants())
+            .attr('class', (d) => {
+                var cname = (d.parent) ? 'child' : 'parent';
+                if (this.getNumberNumber(d.data.count) === 0) {
+                    cname += ' zero';
+                }
+                if (d.data.param === this.props.active && d.parent) {
+                    cname += ' active'
+                }
+                return cname;
             })
     }
 
     render() {
-
         /**
          * set the height and width of the container based on the
          * height/width props passed in
