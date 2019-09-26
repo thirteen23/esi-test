@@ -12,43 +12,60 @@ class App extends React.Component {
         this.onClick = this.onClick.bind(this);
     }
 
-    packData = {
-        "type": "data",
-        "children": [
-           {
-              "type":"Criteria not met",
-              "count":"1,985",
-              "percent":"44",
-              "param":"Criteria-Not-Met"
-           },
-           {
-              "type":"Adherent",
-              "count":"500",
-              "percent":"11",
-              "param":"Adherent"
-           },
-           {
-              "type":"Non-Adherent",
-              "count":"2,000",
-              "percent":"38",
-              "param":"Non-Adherent"
-           },
-           {
-              "type":"Adherent",
-              "count":"250",
-              "percent":"5",
-              "param":"Adherent"
-           },
-           {
-              "type":"Adherent",
-              "count":"100",
-              "percent":"2",
-              "param":"Adherent"
-           }
+    demoData = {
+        "data":[
+            {
+                "type":"Offered",
+                "count":"20,000",
+                "percent":"44",
+                "param":"Offered"
+            },
+            {
+                "type":"Accepted",
+                "count":"10,300",
+                "percent":"29",
+                "param":"Accepted"
+            },
+            {
+                "type":"Patient Sync'd",
+                "count":"7,000",
+                "percent":"16",
+                "param":"Patient-Syncd"
+            },
+            {
+                "type":"Patient Opted out",
+                "count":"4,000",
+                "percent":"9",
+                "param":"Patient-Opted-out"
+            },
+            {
+                "type":"Not Offered",
+                "count":"1,000",
+                "percent":"2",
+                "param":"Not-Offered"
+            },
+            {
+                "type": "Other",
+                "count": "0",
+                "percent": "0",
+                "param":"other"
+            },
+            {
+                "type": "Other",
+                "count": "0",
+                "percent": "0",
+                "param":"other"
+            },
+            {
+                "type": "Other",
+                "count": "0",
+                "percent": "0",
+                "param":"other"
+            }
         ],
         "totalPages":"1",
         "page":"1"
-     }
+    };
 
     onClick(from) {
         this.setState({recentlyClicked: from})
@@ -58,7 +75,15 @@ class App extends React.Component {
         return (
             <div className = "App" >
                 <header className = "App-header" >
-                    <CirclePack width={700} height={700} startDelay={500} elementDelay={50} json={this.packData} onClick={this.onClick} />
+                    <CirclePack
+                        json={this.demoData} // Input data source for circle packing component
+                        onClick={this.onClick} // click handler callback as prop
+                        active={this.state.recentlyClicked} // prop for active category for highlighting
+                        width={700} // width of container and circle
+                        height={700} // height of container and circle
+                        zeroAdjust={200} // amount to add when calculating circle size (Does not affect data display, just circle size)
+                        minSize={50} // the minimum circle radius to display text in anything smaller than this will use annotation callout
+                    />
                     Recently clicked: {this.state.recentlyClicked}
                 </header>
             </div>
