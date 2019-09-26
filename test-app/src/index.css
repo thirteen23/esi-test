@@ -3,35 +3,6 @@ circle {
     stroke-width: 3px;
 }
 
-.child {
-    fill: #675C41;
-    cursor: pointer;
-}
-
-.child:hover {
-    fill: #8c7843;
-}
-
-.active {
-    fill: #FFCD34;
-}
-
-.active:hover {
-    fill: #FFCD34;
-}
-
-.active > text {
-    fill: black;
-}
-
-.child:hover > text {
-    fill: black;
-}
-
-.parent {
-    fill: #3F3F42;
-}
-
 text {
     font: 28px 'rubik', sans-serif;
     fill: white;
@@ -42,24 +13,48 @@ text .text-bold {
     font-weight: bold;
 }
 
-.boxes {
-    position: relative;
-    float: left;
-    width: 50%;
+text:hover {
+    fill: black;
+    cursor: pointer;
 }
 
-.circles {
-    position: relative;
+.parent {
+    fill: #3F3F42;
 }
 
-.zero {
+.child {
+    fill: #675C41;
+    cursor: pointer;
+}
+
+.child:hover {
+    fill: #8C7843;
+}
+
+.child:hover > text {
+    fill: black;
+}
+
+.active + text {
+    fill: black;
+}
+
+.active {
+    fill: #FFCD34;
+}
+
+.active:hover {
+    fill: #FFCD34;
+}
+
+.zero > circle {
     fill: #747474;
     stroke: #5A5A5A;
     stroke-width: 3px;
     cursor: not-allowed;
 }
 
-.zero:hover > text {
+.zero:hover > circle + text {
     fill: white;
     cursor: not-allowed;
 }

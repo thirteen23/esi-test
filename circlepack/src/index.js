@@ -134,15 +134,6 @@ export default class CirclePack extends React.Component {
         layout(root);
 
         var slices = this.g.selectAll('circle').data(nodes).enter().append('g')
-
-        /**
-         * Create the circles and attach click handler to them along with a class for the cursor
-         */
-        slices
-            .append('circle')
-            .attr('cx', (d) => d.x)
-            .attr('cy', (d) => d.y)
-            .attr('r', (d) => d.r - 2)
             .on('click', (d) => {
                 if (this.getNumberNumber(d.data.count) !== 0) {
                     return this.handleClick(d);
@@ -156,13 +147,21 @@ export default class CirclePack extends React.Component {
                 return cname;
             });
 
+        /**
+         * Create the circles and attach click handler to them along with a class for the cursor
+         */
         slices
+            .append('circle')
+            .attr('cx', (d) => d.x)
+            .attr('cy', (d) => d.y)
+            .attr('r', (d) => d.r - 2)
+
+        slices
+            .filter((d) => d.parent && (d.r <= this.props.minSize))
             .append('g')
             .attr('class', 'annotation-circle')
             .each((d) => {
-                if (d.parent && (d.r <= this.props.minSize)) {
-                    annotations.push(this.buildAnnotations(d))
-                }
+                annotations.push(this.buildAnnotations(d))
             })
             .call(annotation()
                 .annotations(annotations)
@@ -170,7 +169,9 @@ export default class CirclePack extends React.Component {
             )
 
 
-        var sliceText = slices.append('text')
+        var sliceText = slices
+            .filter((d) => d.parent && (d.r > this.props.minSize))
+            .append('text')
             .attr('text-anchor', 'middle')
             .attr('dominant-baseline', 'middle')
             .attr('x', (d) => d.x)
