@@ -52,7 +52,7 @@ text .text-bold {
     position: relative;
 }
 
-.zero circle {
+.zero {
     fill: #747474;
     stroke: #5A5A5A;
     stroke-width: 3px;

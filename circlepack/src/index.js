@@ -71,14 +71,33 @@ export default class CirclePack extends React.Component {
 
     buildAnnotations(d) {
         var quadrant = this.getQuadrant(d)
-        console.log(quadrant)
+        var dx, dy;
+
+        switch(quadrant) {
+            case 0:
+                dx = -100
+                dy = -30
+                break;
+            case 1:
+                dx = 100
+                dy = -30
+                break;
+            case 2:
+                dx = -100
+                dy = 30
+                break;
+            case 3:
+                dx = 100
+                dy = 30
+                break;
+        }
 
         return {
             "x": d.x,
             "y": d.y,
-            "dx": -130,
-            "dy": -30,
-            "className": "anno-" + d.data.param,
+            "dx": dx,
+            "dy": dy,
+            "className": "anno-" + quadrant,
             "connector": {
                 "type": "line"
             },
@@ -90,8 +109,9 @@ export default class CirclePack extends React.Component {
                 "lineType": "horizontal",
                 "align": "dynamic",
                 "title": d.data.type,
-                "label": d.data.count || "0"
-            }
+                "label": d.data.count || "0",
+                "wrap": 500
+                }
           }
     }
 
@@ -114,6 +134,15 @@ export default class CirclePack extends React.Component {
         layout(root);
 
         var slices = this.g.selectAll('circle').data(nodes).enter().append('g')
+
+        /**
+         * Create the circles and attach click handler to them along with a class for the cursor
+         */
+        slices
+            .append('circle')
+            .attr('cx', (d) => d.x)
+            .attr('cy', (d) => d.y)
+            .attr('r', (d) => d.r - 2)
             .on('click', (d) => {
                 if (this.getNumberNumber(d.data.count) !== 0) {
                     return this.handleClick(d);
@@ -126,15 +155,6 @@ export default class CirclePack extends React.Component {
                 }
                 return cname;
             });
-
-        /**
-         * Create the circles and attach click handler to them along with a class for the cursor
-         */
-        slices
-            .append('circle')
-            .attr('cx', (d) => d.x)
-            .attr('cy', (d) => d.y)
-            .attr('r', (d) => d.r - 2)
 
         slices
             .append('g')
@@ -168,7 +188,7 @@ export default class CirclePack extends React.Component {
         sliceText
             .append('tspan')
             .attr('x', (d) => d.x)
-            .attr('dy', (d) => '1.25em')
+            .attr('dy', '1.25em')
             .attr('class', 'text-bold')
             .text((d) => {
                 if ((d.r - 2) >= this.props.minSize) {
@@ -200,7 +220,7 @@ export default class CirclePack extends React.Component {
 
     updateCirclePack() {
         this.g
-            .selectAll('g')
+            .selectAll('circle')
             .data(this.buildCircleData().descendants())
             .attr('class', (d) => {
                 var cname = (d.parent) ? 'child' : 'parent';
