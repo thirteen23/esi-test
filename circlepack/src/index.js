@@ -12,6 +12,7 @@ export default class CirclePack extends React.Component {
         this.getNumberNumber = this.getNumberNumber.bind(this);
         this.buildCircleData = this.buildCircleData.bind(this);
         this.buildAnnotations = this.buildAnnotations.bind(this);
+        this.getQuadrant = this.getQuadrant.bind(this);
     }
 
     componentDidMount() {
@@ -59,14 +60,24 @@ export default class CirclePack extends React.Component {
             .sort((d) => d.count);
     }
 
+    getQuadrant(d) {
+        var hpos = 0; // 0 left, 1 right
+        var vpos = 0; // 0 top, 1 bottom
+        if (d.x > d.parent.x) vpos += 1
+        if (d.y > d.parent.y) hpos += 1
+
+        return parseInt(hpos + '' + vpos, 2)
+    }
+
     buildAnnotations(d) {
-        console.log('d', d)
+        var quadrant = this.getQuadrant(d)
+        console.log(quadrant)
 
         return {
             "x": d.x,
             "y": d.y,
-            "dx": -100,
-            "dy": 50,
+            "dx": -130,
+            "dy": -30,
             "className": "anno-" + d.data.param,
             "connector": {
                 "type": "line"
@@ -125,7 +136,6 @@ export default class CirclePack extends React.Component {
             .attr('cy', (d) => d.y)
             .attr('r', (d) => d.r - 2)
 
-        var anno = this.makeAnnotations
         slices
             .append('g')
             .attr('class', 'annotation-circle')
