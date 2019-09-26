@@ -1,6 +1,7 @@
 import React from 'react';
 import { hierarchy, pack } from 'd3-hierarchy';
 import { select } from 'd3-selection';
+import { annotationCustomType, annotationCalloutCircle, annotation } from 'd3-svg-annotation';
 
 export default class CirclePack extends React.Component {
     constructor(props) {
@@ -10,6 +11,7 @@ export default class CirclePack extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.getNumberNumber = this.getNumberNumber.bind(this);
         this.buildCircleData = this.buildCircleData.bind(this);
+        this.buildAnnotations = this.buildAnnotations.bind(this);
     }
 
     componentDidMount() {
@@ -57,7 +59,34 @@ export default class CirclePack extends React.Component {
             .sort((d) => d.count);
     }
 
+    buildAnnotations(d) {
+        console.log('d', d)
+
+        return {
+            "x": d.x,
+            "y": d.y,
+            "dx": -100,
+            "dy": 50,
+            "className": "anno-" + d.data.param,
+            "connector": {
+                "type": "line"
+            },
+            "subject": {
+                "radius": (d.r - 2),
+                "radiusPadding": 0
+            },
+            "note": {
+                "lineType": "horizontal",
+                "align": "dynamic",
+                "title": d.data.type,
+                "label": d.data.count || "0"
+            }
+          }
+    }
+
     drawCirclePack() {
+
+        var annotations = [];
         this.g = select('svg')
             .attr('viewBox', [0, 0, this.props.width, this.props.height])
             .attr('width', this.props.width)
@@ -94,13 +123,30 @@ export default class CirclePack extends React.Component {
             .append('circle')
             .attr('cx', (d) => d.x)
             .attr('cy', (d) => d.y)
-            .attr('r', (d) => d.r - 2);
+            .attr('r', (d) => d.r - 2)
+
+        var anno = this.makeAnnotations
+        slices
+            .append('g')
+            .attr('class', 'annotation-circle')
+            .each((d) => {
+                if (d.parent && (d.r <= this.props.minSize)) {
+                    annotations.push(this.buildAnnotations(d))
+                }
+            })
+            .call(annotation()
+                .annotations(annotations)
+                .type(annotationCalloutCircle)
+            )
+
 
         var sliceText = slices.append('text')
             .attr('text-anchor', 'middle')
             .attr('dominant-baseline', 'middle')
             .attr('x', (d) => d.x)
             .attr('y', (d) => d.y)
+
+
         sliceText
             .append('tspan')
             .text((d) => {
@@ -108,6 +154,7 @@ export default class CirclePack extends React.Component {
                     if (d.parent) { return d.data.type }
                 }
             })
+
         sliceText
             .append('tspan')
             .attr('x', (d) => d.x)
@@ -139,7 +186,6 @@ export default class CirclePack extends React.Component {
                 }
                 return finalSize + "px";
             })
-
     }
 
     updateCirclePack() {
