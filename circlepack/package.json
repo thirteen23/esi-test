@@ -11,6 +11,7 @@
         "react": "^16.9.0"
     },
     "dependencies": {
+        "babel-loader": "^7.0.0",
         "moment": "^2.22.2",
         "react": "^16.9.0",
         "react-dom": "^16.9.0",
@@ -20,7 +21,6 @@
         "babel-cli": "^6.26.0",
         "babel-core": "^6.26.3",
         "babel-jest": "^23.6.0",
-        "babel-loader": "^7.0.0",
         "babel-plugin-transform-object-rest-spread": "^6.26.0",
         "babel-plugin-transform-react-jsx": "^6.24.1",
         "babel-preset-env": "^1.7.0",
