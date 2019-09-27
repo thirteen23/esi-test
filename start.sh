@@ -9,4 +9,4 @@ popd
 cd ./test-app
 npm i
 npm link circlepack
-npm start
+npm run build
