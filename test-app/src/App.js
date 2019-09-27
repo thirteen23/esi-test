@@ -1,5 +1,5 @@
 import React from 'react';
-import CirclePack from 'circlepack';
+import CirclePack from './circlepack/circlepack';
 import './App.css';
 
 class App extends React.Component {

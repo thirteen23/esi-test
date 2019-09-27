@@ -7,7 +7,10 @@
     "react": "^16.9.0",
     "react-app-polyfill": "^1.0.3",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1"
+    "react-scripts": "3.1.1",
+    "d3-hierarchy": "^1.1.8",
+    "d3-selection": "^1.4.0",
+    "d3-svg-annotation": "^2.5.0"
   },
   "scripts": {
     "start": "react-scripts start",

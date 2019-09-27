@@ -1,7 +1,7 @@
 import React from 'react';
 import { hierarchy, pack } from 'd3-hierarchy';
 import { select } from 'd3-selection';
-import { annotationCustomType, annotationCalloutCircle, annotation } from 'd3-svg-annotation';
+import { annotationCalloutCircle, annotation } from 'd3-svg-annotation';
 
 export default class CirclePack extends React.Component {
     constructor(props) {
@@ -36,7 +36,7 @@ export default class CirclePack extends React.Component {
          */
         var count;
         if (typeof n === 'string') {
-            count = (n === '') ? 0 : parseFloat(n.replace(/\,/g, ''));
+            count = (n === '') ? 0 : parseFloat(n.replace(/,/g, ''));
         } else {
             count = n;
         }
@@ -89,6 +89,8 @@ export default class CirclePack extends React.Component {
             case 3:
                 dx = 100
                 dy = 30
+                break;
+            default:
                 break;
         }
 
