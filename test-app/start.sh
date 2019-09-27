@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export NODE_ENV="production"
+
 pushd ../circlepack
 echo "Installing CirclePack Component"
 npm i
