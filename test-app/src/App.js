@@ -50,18 +50,6 @@ class App extends React.Component {
                 "percent": "0",
                 "param":"other"
             },
-            {
-                "type": "Other",
-                "count": "0",
-                "percent": "0",
-                "param":"other"
-            },
-            {
-                "type": "Other",
-                "count": "0",
-                "percent": "0",
-                "param":"other"
-            }
         ],
         "totalPages":"1",
         "page":"1"
@@ -79,9 +67,9 @@ class App extends React.Component {
                         json={this.demoData} // Input data source for circle packing component
                         onClick={this.onClick} // click handler callback as prop
                         active={this.state.recentlyClicked} // prop for active category for highlighting
-                        width={800} // width of container
-                        height={600} // height of container
-                        zeroAdjust={200} // amount to add when calculating circle size (Does not affect data display, just circle size)
+                        width={1024} // width of container
+                        height={768} // height of container
+                        zeroAdjust={100} // amount to add when calculating circle size (Does not affect data display, just circle size)
                         minSize={75} // the minimum circle radius to display text in anything smaller than this will use annotation callout
                     />
                     Recently clicked: {this.state.recentlyClicked}

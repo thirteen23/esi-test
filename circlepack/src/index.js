@@ -116,8 +116,8 @@ export default class CirclePack extends React.Component {
     }
 
     drawCirclePack() {
-
         var annotations = [];
+
         this.g = select('svg')
             .attr('viewBox', [0, 0, this.props.width, this.props.height])
             .attr('width', this.props.width)
@@ -126,7 +126,7 @@ export default class CirclePack extends React.Component {
 
         var layout = pack()
             .size([this.props.width, this.props.height])
-            .padding(3);
+            .padding(5);
 
         var root = this.buildCircleData();
         var nodes = root.descendants();
