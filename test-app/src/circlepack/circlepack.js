@@ -71,49 +71,79 @@ export default class CirclePack extends React.Component {
 
     buildAnnotations(d) {
         var quadrant = this.getQuadrant(d)
-        var dx, dy;
+        var dx, dy, padding, bgPadding;
+        var countClass;
+
+        var xEdge = d.x - d.parent.x;
+        var yEdge = d.y - d.parent.y;
+        var dist = Math.sqrt(xEdge * xEdge + yEdge * yEdge)
+        var xLoc = d.parent.x + xEdge * (d.parent.r - 2) / dist;
+        var yLoc = d.parent.y + yEdge * (d.parent.r - 2) / dist;
+        var edgeOffset = 20;
 
         switch(quadrant) {
             case 0:
-                dx = -100
-                dy = -30
+                dx = xLoc - edgeOffset
+                dy = yLoc - edgeOffset
+                padding = -22
+                bgPadding = {
+                    left: 50
+                }
                 break;
             case 1:
-                dx = 100
-                dy = -30
+                dx = xLoc + edgeOffset
+                dy = yLoc - edgeOffset
+                padding = -22
+                bgPadding = {
+                    right: 50
+                }
                 break;
             case 2:
-                dx = -100
-                dy = 30
+                dx = xLoc - edgeOffset
+                dy = yLoc + edgeOffset
+                padding = -18
+                bgPadding = {
+                    left: 50
+                }
                 break;
             case 3:
-                dx = 100
-                dy = 30
+                dx = xLoc + edgeOffset
+                dy = yLoc + edgeOffset
+                padding = -18
+                bgPadding = {
+                    right: 50
+                }
                 break;
             default:
                 break;
         }
 
+        countClass = (this.getNumberNumber(d.data.count) === 0) ? ' zero' : '';
+
         return {
-            "x": d.x,
-            "y": d.y,
-            "dx": dx,
-            "dy": dy,
-            "className": "anno-" + quadrant,
-            "connector": {
-                "type": "line"
+            x: d.x,
+            y: d.y,
+            nx: dx,
+            ny: dy,
+            className: "anno-" + quadrant + countClass,
+            connector: {
+                type: "line",
             },
-            "subject": {
-                "radius": (d.r - 2),
-                "radiusPadding": 0
+            subject: {
+                radius: (d.r - 2),
+                radiusPadding: 1.5,
             },
-            "note": {
-                "lineType": "horizontal",
-                "align": "dynamic",
-                "title": d.data.type,
-                "label": d.data.count || "0",
-                "wrap": 500
-                }
+            note: {
+                lineType: "horizontal",
+                align: "dynamic",
+                title: d.data.type,
+                label: d.data.count || "0",
+                padding: padding,
+                wrap: 500,
+                bgPadding: bgPadding,
+            },
+            // we don't actually need the circle drawn, so we can disable it
+            "disable": ["subject"]
           }
     }
 
@@ -121,7 +151,7 @@ export default class CirclePack extends React.Component {
         var annotations = [];
 
         this.g = select('svg')
-            .attr('viewBox', [0, 0, this.props.width, this.props.height])
+            .attr('viewBox', [-32, -32, this.props.width + 64, this.props.height + 64])
             .attr('width', this.props.width)
             .attr('height', this.props.height)
             .select('g');
@@ -160,11 +190,13 @@ export default class CirclePack extends React.Component {
 
         slices
             .filter((d) => d.parent && (d.r <= this.props.minSize))
-            .append('g')
-            .attr('class', 'annotation-circle')
             .each((d) => {
                 annotations.push(this.buildAnnotations(d))
             })
+
+        this.g
+            .append('g')
+            .attr('class', 'annotation-circle')
             .call(annotation()
                 .annotations(annotations)
                 .type(annotationCalloutCircle)
@@ -223,7 +255,7 @@ export default class CirclePack extends React.Component {
 
     updateCirclePack() {
         this.g
-            .selectAll('circle')
+            .selectAll('g')
             .data(this.buildCircleData().descendants())
             .attr('class', (d) => {
                 var cname = (d.parent) ? 'child' : 'parent';

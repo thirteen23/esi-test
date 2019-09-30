@@ -50,6 +50,18 @@ class App extends React.Component {
                 "percent": "0",
                 "param":"other"
             },
+            {
+                "type": "Other",
+                "count": "0",
+                "percent": "0",
+                "param":"other"
+            },
+            {
+                "type": "Other",
+                "count": "0",
+                "percent": "0",
+                "param":"other"
+            },
         ],
         "totalPages":"1",
         "page":"1"
