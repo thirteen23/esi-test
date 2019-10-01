@@ -77,8 +77,8 @@ export default class CirclePack extends React.Component {
         var xEdge = d.x - d.parent.x;
         var yEdge = d.y - d.parent.y;
         var dist = Math.sqrt(xEdge * xEdge + yEdge * yEdge)
-        var xLoc = d.parent.x + xEdge * (d.parent.r - 2) / dist;
-        var yLoc = d.parent.y + yEdge * (d.parent.r - 2) / dist;
+        var xLoc = (d.parent.x + xEdge * (d.parent.r - 2) / dist) - d.x;
+        var yLoc = (d.parent.y + yEdge * (d.parent.r - 2) / dist) - d.y;
         var edgeOffset = 20;
 
         switch(quadrant) {
@@ -86,33 +86,21 @@ export default class CirclePack extends React.Component {
                 dx = xLoc - edgeOffset
                 dy = yLoc - edgeOffset
                 padding = -22
-                bgPadding = {
-                    left: 50
-                }
                 break;
             case 1:
                 dx = xLoc + edgeOffset
                 dy = yLoc - edgeOffset
                 padding = -22
-                bgPadding = {
-                    right: 50
-                }
                 break;
             case 2:
                 dx = xLoc - edgeOffset
                 dy = yLoc + edgeOffset
                 padding = -18
-                bgPadding = {
-                    left: 50
-                }
                 break;
             case 3:
                 dx = xLoc + edgeOffset
                 dy = yLoc + edgeOffset
                 padding = -18
-                bgPadding = {
-                    right: 50
-                }
                 break;
             default:
                 break;
@@ -123,12 +111,9 @@ export default class CirclePack extends React.Component {
         return {
             x: d.x,
             y: d.y,
-            nx: dx,
-            ny: dy,
+            dx: dx, dy: dy,
             className: "anno-" + quadrant + countClass,
-            connector: {
-                type: "line",
-            },
+            connector: { type: "line" },
             subject: {
                 radius: (d.r - 2),
                 radiusPadding: 1.5,
@@ -139,11 +124,10 @@ export default class CirclePack extends React.Component {
                 title: d.data.type,
                 label: d.data.count || "0",
                 padding: padding,
-                wrap: 500,
-                bgPadding: bgPadding,
-            },
-            // we don't actually need the circle drawn, so we can disable it
-            "disable": ["subject"]
+                wrap: 200
+           },
+           // we don't actually need the circle drawn, so we can disable it
+           disable: ["subject"]
           }
     }
 
@@ -196,7 +180,7 @@ export default class CirclePack extends React.Component {
 
         this.g
             .append('g')
-            .attr('class', 'annotation-circle')
+            .attr('class', 'annotation-layer')
             .call(annotation()
                 .annotations(annotations)
                 .type(annotationCalloutCircle)

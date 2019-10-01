@@ -59,6 +59,10 @@ text:hover {
     cursor: not-allowed;
 }
 
+.annotation-layer {
+    cursor: default;
+}
+
 .annotation-connector .connector,
 .annotation-note .note-line {
     stroke-width: 2;
@@ -71,15 +75,11 @@ text:hover {
 }
 
 .zero, .zero ~ .annotation-note-content {
-    cursor: not-allowed;
+    cursor: default;
 }
 
 .annotation-subject .subject {
     stroke: none;
-}
-
-.annotation-note-content {
-    margin-right: 20px;
 }
 
 .annotation-note-label, .annotation-note-label:hover,
@@ -87,6 +87,7 @@ text:hover {
     stroke: white;
     fill: white;
     font-size: 16px;
+    cursor: default;
 }
 
 .annotation-note-title, .annotation-note-title:hover {
