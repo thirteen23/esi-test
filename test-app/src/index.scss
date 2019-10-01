@@ -23,11 +23,11 @@ text {
         stroke: #BD8F2C;
         stroke-width: 3px;
     }
-    .parent {
+    .parent-circle {
         fill: #3F3F42;
     }
 
-    .child {
+    .child-circle {
         fill: #675C41;
         cursor: pointer;
 
@@ -41,7 +41,7 @@ text {
     }
 
 
-    .active {
+    .active-circle {
         fill: #FFCD34;
 
         > text {
@@ -59,11 +59,11 @@ text {
         stroke: #A2005E;
         stroke-width: 3px;
     }
-    .parent {
+    .parent-circle {
         fill: #3B3547;
     }
 
-    .child {
+    .child-circle {
         fill: #52294D;
         cursor: pointer;
 
@@ -78,7 +78,7 @@ text {
     }
 
 
-    .active {
+    .active-circle {
         fill: #FF0094;
 
         > text {
@@ -91,7 +91,7 @@ text {
     }
 }
 
-.zero {
+.zero-circle {
     > circle {
         fill: #747474;
         stroke: #5A5A5A;

@@ -106,7 +106,7 @@ export default class CirclePack extends React.Component {
                 break;
         }
 
-        countClass = (this.getNumberNumber(d.data.count) === 0) ? ' zero' : '';
+        countClass = (this.getNumberNumber(d.data.count) === 0) ? ' zero-circle' : '';
 
         return {
             x: d.x,
@@ -157,9 +157,9 @@ export default class CirclePack extends React.Component {
                 }
             })
             .attr('class', (d) => {
-                var cname = (d.parent) ? 'child' : 'parent';
+                var cname = (d.parent) ? 'child-circle' : 'parent-circle';
                 if (this.getNumberNumber(d.data.count) === 0) {
-                    cname = cname + ' zero';
+                    cname = cname + ' zero-circle';
                 }
                 return cname;
             });
@@ -242,12 +242,12 @@ export default class CirclePack extends React.Component {
             .selectAll('g')
             .data(this.buildCircleData().descendants())
             .attr('class', (d) => {
-                var cname = (d.parent) ? 'child' : 'parent';
+                var cname = (d.parent) ? 'child-circle' : 'parent-circle';
                 if (this.getNumberNumber(d.data.count) === 0) {
-                    cname += ' zero';
+                    cname += ' zero-circle';
                 }
                 if (d.data.param === this.props.active && d.parent) {
-                    cname += ' active'
+                    cname += ' active-circle'
                 }
                 return cname;
             })
