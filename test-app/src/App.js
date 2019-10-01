@@ -83,6 +83,7 @@ class App extends React.Component {
                         height={768} // height of container
                         zeroAdjust={100} // amount to add when calculating circle size (Does not affect data display, just circle size)
                         minSize={75} // the minimum circle radius to display text in anything smaller than this will use annotation callout
+                        className="diabetes" // Classname for color palette
                     />
                     Recently clicked: {this.state.recentlyClicked}
                 </header>

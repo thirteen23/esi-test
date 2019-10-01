@@ -71,7 +71,7 @@ export default class CirclePack extends React.Component {
 
     buildAnnotations(d) {
         var quadrant = this.getQuadrant(d)
-        var dx, dy, padding, bgPadding;
+        var dx, dy, padding;
         var countClass;
 
         var xEdge = d.x - d.parent.x;
@@ -114,6 +114,7 @@ export default class CirclePack extends React.Component {
             dx: dx, dy: dy,
             className: "anno-" + quadrant + countClass,
             connector: { type: "line" },
+            bbox: { x: 100, y: 100, width: 500, height: 500 },
             subject: {
                 radius: (d.r - 2),
                 radiusPadding: 1.5,
@@ -124,7 +125,7 @@ export default class CirclePack extends React.Component {
                 title: d.data.type,
                 label: d.data.count || "0",
                 padding: padding,
-                wrap: 200
+                wrap: 200,
            },
            // we don't actually need the circle drawn, so we can disable it
            disable: ["subject"]
@@ -185,7 +186,6 @@ export default class CirclePack extends React.Component {
                 .annotations(annotations)
                 .type(annotationCalloutCircle)
             )
-
 
         var sliceText = slices
             .filter((d) => d.parent && (d.r > this.props.minSize))
@@ -264,7 +264,7 @@ export default class CirclePack extends React.Component {
         }
 
         return (
-            <div className="circles" style={containerStyle}>
+            <div className={this.props.className + " circles"} style={containerStyle}>
                 <svg><g></g></svg>
             </div>
         )
