@@ -151,8 +151,7 @@ export default class CirclePack extends React.Component {
         this.g = select('svg')
             .attr('viewBox', [-32, -32, this.props.width + 64, this.props.height + 64])
             .attr('width', this.props.width)
-            .attr('height', this.props.height)
-            .select('g');
+            .attr('height', this.props.height);
 
         var layout = pack()
             .size([this.props.width, this.props.height])
@@ -278,7 +277,7 @@ export default class CirclePack extends React.Component {
 
         return (
             <div className={this.props.className + " circles"} style={containerStyle}>
-                <svg><g></g></svg>
+                <svg></svg>
             </div>
         )
     }
