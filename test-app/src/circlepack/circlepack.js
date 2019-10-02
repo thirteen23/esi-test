@@ -109,8 +109,7 @@ export default class CirclePack extends React.Component {
         countClass = (this.getNumberNumber(d.data.count) === 0) ? ' zero-circle' : '';
 
         return {
-            x: d.x,
-            y: d.y,
+            x: d.x, y: d.y,
             dx: dx, dy: dy,
             className: "anno-" + quadrant + countClass,
             connector: { type: "line" },

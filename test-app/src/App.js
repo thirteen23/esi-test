@@ -7,9 +7,11 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            recentlyClicked: ""
+            recentlyClicked: "",
+            currentStyle: "diabetes"
         }
         this.onClick = this.onClick.bind(this);
+        this.changeStyle = this.changeStyle.bind(this);
     }
 
     demoData = {
@@ -71,6 +73,10 @@ class App extends React.Component {
         this.setState({recentlyClicked: from})
     }
 
+    changeStyle(style) {
+        this.setState({currentStyle: style})
+    }
+
     render() {
         return (
             <div className = "App" >
@@ -83,9 +89,16 @@ class App extends React.Component {
                         height={768} // height of container
                         zeroAdjust={100} // amount to add when calculating circle size (Does not affect data display, just circle size)
                         minSize={75} // the minimum circle radius to display text in anything smaller than this will use annotation callout
-                        className="diabetes" // Classname for color palette
+                        className={this.state.currentStyle} // Classname for color palette
                     />
                     Recently clicked: {this.state.recentlyClicked}
+                    <div className='styleButtons'>
+                        <span>Style update example:</span>
+                        <div>
+                            <button onClick={(e) => this.changeStyle('diabetes')}>diabetes</button>
+                            <button onClick={(e) => this.changeStyle('pulmonary')}>pulmonary</button>
+                        </div>
+                    </div>
                 </header>
             </div>
         );

@@ -40,7 +40,6 @@ text {
         }
     }
 
-
     .active-circle {
         fill: #FFCD34;
 
@@ -76,7 +75,6 @@ text {
             }
         }
     }
-
 
     .active-circle {
         fill: #FF0094;
@@ -139,4 +137,15 @@ text {
 
 .annotation-note-title, .annotation-note-title:hover {
     font-weight: 100;
+}
+
+.styleButtons {
+    span {
+        font-size: 18px;
+    }
+    button {
+        height: 25px;
+        width: 100px;
+        margin: 12px;
+    }
 }
