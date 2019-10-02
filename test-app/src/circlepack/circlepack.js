@@ -203,7 +203,7 @@ export default class CirclePack extends React.Component {
             .filter((d) => d.parent && (d.r > this.props.minSize))
             .append('text')
             .attr('text-anchor', 'middle')
-            .attr('dominant-baseline', 'middle')
+            .attr('dominant-baseline', 'baseline')
             .attr('x', (d) => d.x)
             .attr('y', (d) => d.y)
 
