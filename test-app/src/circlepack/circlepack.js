@@ -61,6 +61,12 @@ export default class CirclePack extends React.Component {
     }
 
     getQuadrant(d) {
+        /**
+         * we need to know what quadrant of the parent circle the child is
+         * in so that we can make sure things end up in the right place.
+         * Create a binary representation and convert it to an int to
+         * pass back to the annotation builder.
+        */
         var hpos = 0; // 0 left, 1 right
         var vpos = 0; // 0 top, 1 bottom
         if (d.x > d.parent.x) vpos += 1
@@ -70,34 +76,41 @@ export default class CirclePack extends React.Component {
     }
 
     buildAnnotations(d) {
-        var quadrant = this.getQuadrant(d)
         var dx, dy, padding;
         var countClass;
+        var quadrant = this.getQuadrant(d)
 
+        /**
+         * Calculate the nearest edge of the parent circle
+         * to the child we're generating an annotation for
+         */
         var xEdge = d.x - d.parent.x;
         var yEdge = d.y - d.parent.y;
         var dist = Math.sqrt(xEdge * xEdge + yEdge * yEdge)
         var xLoc = (d.parent.x + xEdge * (d.parent.r - 2) / dist) - d.x;
         var yLoc = (d.parent.y + yEdge * (d.parent.r - 2) / dist) - d.y;
+
+        // Add in a bit of offset so the 'elbow' of the line isn't right on the radius of the parent circle
         var edgeOffset = 20;
 
+        // do some magic based on the quadrant of the circle so stuff shows up in the right places
         switch(quadrant) {
-            case 0:
+            case 0: // top-left
                 dx = xLoc - edgeOffset
                 dy = yLoc - edgeOffset
                 padding = -22
                 break;
-            case 1:
+            case 1: // top-right
                 dx = xLoc + edgeOffset
                 dy = yLoc - edgeOffset
                 padding = -22
                 break;
-            case 2:
+            case 2: // bottom-left
                 dx = xLoc - edgeOffset
                 dy = yLoc + edgeOffset
                 padding = -18
                 break;
-            case 3:
+            case 3: // bottom-right
                 dx = xLoc + edgeOffset
                 dy = yLoc + edgeOffset
                 padding = -18
@@ -106,14 +119,15 @@ export default class CirclePack extends React.Component {
                 break;
         }
 
+        // set a class to determine the style of the annotation line
         countClass = (this.getNumberNumber(d.data.count) === 0) ? ' zero-circle' : '';
 
+        // create the annotation rules to pass back to the annotation generator
         return {
             x: d.x, y: d.y,
             dx: dx, dy: dy,
             className: "anno-" + quadrant + countClass,
             connector: { type: "line" },
-            bbox: { x: 100, y: 100, width: 500, height: 500 },
             subject: {
                 radius: (d.r - 2),
                 radiusPadding: 1.5,
