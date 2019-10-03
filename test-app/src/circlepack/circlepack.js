@@ -126,7 +126,7 @@ export default class CirclePack extends React.Component {
             x: d.x, y: d.y,
             dx: dx, dy: dy,
             className: "anno-" + quadrant + countClass,
-            connector: { type: "elbow" },
+            connector: { type: "line" },
             subject: {
                 radius: (d.r - 2),
                 radiusPadding: 1.5,
