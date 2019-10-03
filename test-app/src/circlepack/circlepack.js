@@ -84,35 +84,34 @@ export default class CirclePack extends React.Component {
          * Calculate the nearest edge of the parent circle
          * to the child we're generating an annotation for
          */
-        var xEdge = d.x - d.parent.x;
-        var yEdge = d.y - d.parent.y;
-        var dist = Math.sqrt(xEdge * xEdge + yEdge * yEdge)
+        var xEdge = (d.x - d.r) - d.parent.x;
+        var yEdge = (d.y - d.r) - d.parent.y;
+        var dist = Math.sqrt(xEdge * xEdge + yEdge * yEdge) - 20
         var xLoc = (d.parent.x + xEdge * (d.parent.r - 2) / dist) - d.x;
         var yLoc = (d.parent.y + yEdge * (d.parent.r - 2) / dist) - d.y;
 
         // Add in a bit of offset so the 'elbow' of the line isn't right on the radius of the parent circle
-        var edgeOffset = 20;
 
         // do some magic based on the quadrant of the circle so stuff shows up in the right places
         switch(quadrant) {
             case 0: // top-left
-                dx = xLoc - edgeOffset
-                dy = yLoc - edgeOffset
+                dx = xLoc
+                dy = yLoc
                 padding = -22
                 break;
             case 1: // top-right
-                dx = xLoc + edgeOffset
-                dy = yLoc - edgeOffset
+                dx = xLoc
+                dy = yLoc
                 padding = -22
                 break;
             case 2: // bottom-left
-                dx = xLoc - edgeOffset
-                dy = yLoc + edgeOffset
+                dx = xLoc
+                dy = yLoc
                 padding = -18
                 break;
             case 3: // bottom-right
-                dx = xLoc + edgeOffset
-                dy = yLoc + edgeOffset
+                dx = xLoc
+                dy = yLoc
                 padding = -18
                 break;
             default:
@@ -127,7 +126,7 @@ export default class CirclePack extends React.Component {
             x: d.x, y: d.y,
             dx: dx, dy: dy,
             className: "anno-" + quadrant + countClass,
-            connector: { type: "line" },
+            connector: { type: "elbow" },
             subject: {
                 radius: (d.r - 2),
                 radiusPadding: 1.5,
@@ -148,8 +147,9 @@ export default class CirclePack extends React.Component {
     drawCirclePack() {
         var annotations = [];
 
+        // select the svg container to draw the elements in
         this.g = select('svg')
-            .attr('viewBox', [-32, -32, this.props.width + 64, this.props.height + 64])
+            .attr('viewBox', [-50, -50, this.props.width + 100, this.props.height + 100])
             .attr('width', this.props.width)
             .attr('height', this.props.height);
 
@@ -163,11 +163,13 @@ export default class CirclePack extends React.Component {
         layout(root);
 
         var slices = this.g.selectAll('circle').data(nodes).enter().append('g')
+            // use the click handler passed in from props
             .on('click', (d) => {
                 if (this.getNumberNumber(d.data.count) !== 0) {
                     return this.handleClick(d);
                 }
             })
+            // determine the default class for each circle based on a few criteria (zero count, parent, child)
             .attr('class', (d) => {
                 var cname = (d.parent) ? 'child-circle' : 'parent-circle';
                 if (this.getNumberNumber(d.data.count) === 0) {
@@ -185,12 +187,14 @@ export default class CirclePack extends React.Component {
             .attr('cy', (d) => d.y)
             .attr('r', (d) => d.r - 2)
 
+        // Build the annotations for the annotation layer if the circle is under the minSize threshold
         slices
             .filter((d) => d.parent && (d.r <= this.props.minSize))
             .each((d) => {
                 annotations.push(this.buildAnnotations(d))
             })
 
+        // draw the annotations layer
         this.g
             .append('g')
             .attr('class', 'annotation-layer')
@@ -199,6 +203,7 @@ export default class CirclePack extends React.Component {
                 .type(annotationCalloutCircle)
             )
 
+        // render the text in the circles if they meet the minSize requirement
         var sliceText = slices
             .filter((d) => d.parent && (d.r > this.props.minSize))
             .append('text')
@@ -207,7 +212,7 @@ export default class CirclePack extends React.Component {
             .attr('x', (d) => d.x)
             .attr('y', (d) => d.y)
 
-
+        // draw the type label
         sliceText
             .append('tspan')
             .text((d) => {
@@ -216,6 +221,7 @@ export default class CirclePack extends React.Component {
                 }
             })
 
+        // draw the count
         sliceText
             .append('tspan')
             .attr('x', (d) => d.x)
@@ -227,6 +233,7 @@ export default class CirclePack extends React.Component {
                 }
             })
 
+        // determine the font size of the text based on the size of the circle with a min/max threshold range
         sliceText
             .style("font-size", function (d) {
                 /**
@@ -250,6 +257,9 @@ export default class CirclePack extends React.Component {
     }
 
     updateCirclePack() {
+        /**
+         * when a prop update happens, this will get fired to update the class of the circles
+         */
         this.g
             .selectAll('g')
             .data(this.buildCircleData().descendants())
