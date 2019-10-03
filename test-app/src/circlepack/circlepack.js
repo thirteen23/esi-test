@@ -77,7 +77,7 @@ export default class CirclePack extends React.Component {
 
     buildAnnotations(d) {
         var dx, dy, padding;
-        var countClass;
+        var countClass, padClass;
         var quadrant = this.getQuadrant(d)
 
         /**
@@ -98,21 +98,25 @@ export default class CirclePack extends React.Component {
                 dx = xLoc
                 dy = yLoc
                 padding = -22
+                padClass = ' parent-top'
                 break;
             case 1: // top-right
                 dx = xLoc
                 dy = yLoc
                 padding = -22
+                padClass = ' parent-top'
                 break;
             case 2: // bottom-left
                 dx = xLoc
                 dy = yLoc
                 padding = -18
+                padClass = ' parent-bot'
                 break;
             case 3: // bottom-right
                 dx = xLoc
                 dy = yLoc
                 padding = -18
+                padClass = ' parent-bot'
                 break;
             default:
                 break;
@@ -125,7 +129,7 @@ export default class CirclePack extends React.Component {
         return {
             x: d.x, y: d.y,
             dx: dx, dy: dy,
-            className: "anno-" + quadrant + countClass,
+            className: "anno-" + quadrant + countClass + padClass,
             connector: { type: "line" },
             subject: {
                 radius: (d.r - 2),

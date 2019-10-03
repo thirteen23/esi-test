@@ -154,3 +154,23 @@ text {
         margin: 12px;
     }
 }
+
+.parent {
+    // unfortunately, since d3-svg-annotations only supports very rudimentary positioning of the text, we need to nudge it a bit differently for different browsers
+    &-top {
+        .annotation-note > .annotation-note-content {
+            .annotation-note-title {
+                transform: translateY(0);
+                -webkit-transform: translateY(-2px);
+                -moz-transform: translateY(1px);
+            }
+        }
+    }
+    &-bot {
+        .annotation-note > .annotation-note-content {
+            .annotation-note-title {
+                transform: translateY(1px);
+            }
+        }
+    }
+}
